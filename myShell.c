@@ -1,18 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h> // For strtok() and strcmp()
-#include <unistd.h> // For fork(), pid_t
-#include <sys/wait.h> // For waitpid() and associated macros
+#include <string.h> 
+#include <unistd.h> 
+#include <sys/wait.h> 
 
-char SHELL_NAME[50] = "myShell";
+char SHELL_NAME[50] = "fsh>";
 int QUIT = 0;
 
 // Function to read a line from command into the buffer
 char *readLine()
 {
 	char *line = (char *)malloc(sizeof(char) * 1024); // Dynamically Allocate Buffer
-	char c;
-	int pos = 0, bufsize = 1024;
+	char a;
+	int pos = 0, buf = 1024;
 	if (!line) // Buffer Allocation Failed
 	{
 		printf("\nBuffer Allocation Error.");
@@ -20,22 +20,22 @@ char *readLine()
 	}
 	while(1)
 	{
-		c=getchar();
-		if (c == EOF || c == '\n') // If End of File or New line, replace with Null character
+		a=getchar();
+		if (a == EOF || a == '\n') // If End of File or New line, replace with Null character
 		{
 			line[pos] = '\0';
 			return line;
 		}
 		else
 		{
-			line[pos] = c;
+			line[p] = a;
 		}
-		pos ++;
+		p ++;
 		// If we have exceeded the buffer
-		if (pos >= bufsize)
+		if (p >= buf)
 		{
-			bufsize += 1024;
-			line = realloc(line, sizeof(char) * bufsize);
+			buf += 1024;
+			line = realloc(line, sizeof(char) * buf);
 			if (!line) // Buffer Allocation Failed
 			{
 			printf("\nBuffer Allocation Error.");
@@ -52,7 +52,7 @@ char **splitLine(char *line)
 	char **tokens = (char **)malloc(sizeof(char *) * 64);
 	char *token;
 	char delim[10] = " \t\n\r\a";
-	int pos = 0, bufsize = 64;
+	int p = 0, buf = 64;
 	if (!tokens)
 	{
 		printf("\nBuffer Allocation Error.");
@@ -61,12 +61,12 @@ char **splitLine(char *line)
 	token = strtok(line, delim);
 	while (token != NULL)
 	{
-		tokens[pos] = token;
-		pos ++;
-		if (pos >= bufsize)
+		tokens[p] = token;
+		p ++;
+		if (p >= buf)
 		{
-			bufsize += 64;
-			line = realloc(line, bufsize * sizeof(char *));
+			buf += 64;
+			line = realloc(line, buf * sizeof(char *));
 			if (!line) // Buffer Allocation Failed
 			{
 			printf("\nBuffer Allocation Error.");
@@ -75,7 +75,7 @@ char **splitLine(char *line)
 		}
 		token = strtok(NULL, delim);
 	}
-	tokens[pos] = NULL;
+	tokens[p] = NULL;
 	return tokens;
 }
 
@@ -202,7 +202,7 @@ int myShellInteract()
 	char **args;
 	while(QUIT == 0)
 	{
-		printf("%s> ", SHELL_NAME);
+		printf(SHELL_NAME);
 		line=readLine();
 		args=splitLine(line);
 		execShell(args);
